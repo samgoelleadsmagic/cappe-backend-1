@@ -47,7 +47,7 @@ module.exports = class UserService {
     try {
       const token = IDToken.token;
         console.log('IDToken = ', token);
-
+        console.log('Project ID = ', serviceAccount.project_id);
         
 
         admin.initializeApp({
