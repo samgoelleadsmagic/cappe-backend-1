@@ -12,7 +12,7 @@ const serviceAccount = {
   type: process.env.TYPE,
   project_id: process.env.PROJECTID,
   private_key_id: process.env.PROJECTKEYID,
-  private_key: PRIVATEKEY,
+  private_key: PRIVATEKEY.replace(/\\n/g, '\n'),
   client_email: process.env.CLIENTEMAIL,
   client_id: process.env.CLIENTID,
   auth_uri: process.env.AUTHURI,
