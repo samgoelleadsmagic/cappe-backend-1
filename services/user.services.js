@@ -54,6 +54,7 @@ module.exports = class UserService {
       const token = IDToken.token;
       console.log("IDToken = ", token);
       console.log("Project ID = ", serviceAccount.project_id);
+      console.log("Private Key = ", PRIVATEKEY);
 
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
