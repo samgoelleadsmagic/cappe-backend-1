@@ -24,6 +24,10 @@ const serviceAccount = {
 db.sequelize.sync();
 const User = db.user;
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
 module.exports = class UserService {
   static async getAllUsers() {
     try {
@@ -56,9 +60,7 @@ module.exports = class UserService {
       console.log("Project ID = ", serviceAccount.project_id);
       console.log("Private Key = ", PRIVATEKEY);
 
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
+
 
       admin
         .auth()
