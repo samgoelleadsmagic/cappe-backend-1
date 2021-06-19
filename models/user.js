@@ -1,19 +1,57 @@
-
 module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("users", {
-    name: {
-      type: Sequelize.STRING,
+  const User = sequelize.define(
+    "user",
+    {
+      userID: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+        allowNull: false,
+      },
+      first_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      last_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      phone: {
+        type: Sequelize.BIGINT,
+        allowNull: false
+      },
+      country: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      state: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "",
+      },
+      pincode: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
+    {
+      tablename: "tb_user",
+    }
+  );
 
-    email: {
-      type: Sequelize.STRING,
-    },
-
-    phone: {
-      type: Sequelize.INTEGER,
-    },
-  },{});
-
-   return User;
+  return User;
 };
-

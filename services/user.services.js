@@ -1,5 +1,6 @@
 const db = require("../models/index");
 const admin = require("firebase-admin");
+const { response } = require("express");
 const PRIVATEKEY =
   process.env.PRIVATEKEY1 +
   process.env.PRIVATEKEY2 +
@@ -12,7 +13,7 @@ const serviceAccount = {
   type: process.env.TYPE,
   project_id: process.env.PROJECTID,
   private_key_id: process.env.PROJECTKEYID,
-  private_key: PRIVATEKEY.replace(/\\n/g, '\n'),
+  private_key: PRIVATEKEY.replace(/\\n/g, "\n"),
   client_email: process.env.CLIENTEMAIL,
   client_id: process.env.CLIENTID,
   auth_uri: process.env.AUTHURI,
@@ -37,13 +38,19 @@ module.exports = class UserService {
       console.log(`Could not fetch Users ${error}`);
     }
   }
+  static async getUserData(phone_number) {
+    try {
+      const userData = await User.findAll({ where: { phone: phone_number } });
+      return userData;
+    } catch (error) {
+      console.log(`User does not exist ${error}`);
+    }
+  }
   static async addUser(data) {
     try {
       console.log("User = ", User);
 
       const newUser = {
-        name: data.name,
-        email: data.email,
         phone: data.phone,
       };
       const response = await User.create(newUser);
@@ -60,14 +67,24 @@ module.exports = class UserService {
       console.log("Project ID = ", serviceAccount.project_id);
       console.log("Private Key = ", PRIVATEKEY);
 
-
-
       admin
         .auth()
         .verifyIdToken(token)
-        .then((decodedToken) => {
+        .then(async (decodedToken) => {
           console.log("This is a token ", decodedToken);
-          return decodedToken;
+          const data = {
+            phone: decodedToken.phone_number,
+          };
+          const dataExists = await UserService.getUserData(data.phone);
+          if (dataExists.length == 0) {
+            const dd = await UserService.addUser(data);
+            dd.setDataValue("userExists", false);
+            return dd;
+          } else {
+            dataExists[0].setDataValue("userExists", true);
+            return dataExists[0];
+          }
+          //return decodedToken;
         })
         .catch((error) => {
           console.log("Error verifying custom token:", error);
