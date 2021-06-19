@@ -80,11 +80,11 @@ module.exports = class UserService {
             const dd = await UserService.addUser(data);
             dd.setDataValue("userExists", false);
             console.log('Here 1', dd);
-            return dd;
+            return await dd;
           } else {
             dataExists[0].setDataValue("userExists", true);
             console.log('Here 2', dataExists[0]);
-            return dataExists[0];
+            return await dataExists[0];
           }
           //return decodedToken;
         })
