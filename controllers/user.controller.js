@@ -33,7 +33,7 @@ module.exports = class Users {
     try {
       console.log(req);
       const decodedToken = await UserService.checkIDToken(req.body);
-      console.log(decodedToken);
+      console.log('Here 3', decodedToken);
       res.json(decodedToken);
     } catch (error) {
       res.status(500).json({ error: error });
