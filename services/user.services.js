@@ -25,6 +25,7 @@ const serviceAccount = {
 db.sequelize.sync();
 const User = db.user;
 
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });

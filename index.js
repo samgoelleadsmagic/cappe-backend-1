@@ -2,14 +2,16 @@ require("dotenv").config();
 //const articles = require("./routes/article.routes");
 const express = require("express");
 
-const router = require('./routes/user.routes.js');
+const routerUser = require('./routes/user.routes.js');
+const routerProduct = require('./routes/product.routes.js');
 const app = express();
 const port = process.env.PORT || 8080;
 
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/', router);
+app.use('/user', routerUser);
+app.use('/product', routerProduct);
 
 
 const db = require('./models/index');
