@@ -67,32 +67,55 @@ module.exports = class UserService {
       console.log("Project ID = ", serviceAccount.project_id);
       console.log("Private Key = ", PRIVATEKEY);
 
-      admin
-        .auth()
-        .verifyIdToken(token)
-        .then(async (decodedToken) => {
-          console.log("This is a token ", decodedToken);
-          const data = {
-            phone: decodedToken.phone_number,
-          };
-          const dataExists = await UserService.getUserData(data.phone);
-          if (dataExists.length == 0) {
-            const dd = await UserService.addUser(data);
-            dd.setDataValue("userExists", false);
-            console.log('Here 1', dd);
-            return await dd;
-          } else {
-            dataExists[0].setDataValue("userExists", true);
-            console.log('Here 2', dataExists[0]);
-            return await dataExists[0];
-          }
-          //return decodedToken;
-        })
-        .catch((error) => {
-          console.log("Error verifying custom token:", error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      console.log("This is a token ", decodedToken);
+      const data = {
+          phone: decodedToken.phone_number,
+        };
+        const dataExists = await UserService.getUserData(data.phone);
+        if (dataExists.length == 0) {
+          const dd = await UserService.addUser(data);
+          dd.setDataValue("userExists", false);
+          console.log("Here 1", dd);
+          return dd;
+        } else {
+          dataExists[0].setDataValue("userExists", true);
+          console.log("Here 2", dataExists[0]);
+          return dataExists[0];
+        }
+        //return decodedToken;
+      }
+      catch (error) {
+          console.log(error);
+        }
+
+
+    //   admin
+    //     .auth()
+    //     .verifyIdToken(token)
+    //     .then(async (decodedToken) => {
+    //       console.log("This is a token ", decodedToken);
+    //       const data = {
+    //         phone: decodedToken.phone_number,
+    //       };
+    //       const dataExists = await UserService.getUserData(data.phone);
+    //       if (dataExists.length == 0) {
+    //         const dd = await UserService.addUser(data);
+    //         dd.setDataValue("userExists", false);
+    //         console.log("Here 1", dd);
+    //         return dd;
+    //       } else {
+    //         dataExists[0].setDataValue("userExists", true);
+    //         console.log("Here 2", dataExists[0]);
+    //         return dataExists[0];
+    //       }
+    //       //return decodedToken;
+    //     })
+    //     .catch((error) => {
+    //       console.log("Error verifying custom token:", error);
+    //     });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 };
