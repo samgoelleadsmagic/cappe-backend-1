@@ -3,8 +3,8 @@ module.exports = (sequelize, Sequelize) => {
     "products",
     {
       productID: {
-        type: Sequelize.STRING,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },

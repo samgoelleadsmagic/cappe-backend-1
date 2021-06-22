@@ -22,7 +22,7 @@ const serviceAccount = {
   client_x509_cert_url: process.env.CLIENTX509CERTURL,
 };
 
-db.sequelize.sync();
+//db.sequelize.sync();
 const User = db.user;
 
 
