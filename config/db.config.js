@@ -2,7 +2,7 @@ module.exports = {
 
     HOST: process.env.HOST,
     
-    USER: process.env.USER,
+    USER: process.env.CAPPE_USERNAME,
     
     PASSWORD: process.env.PASSWORD,
     
