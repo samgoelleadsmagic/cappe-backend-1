@@ -1,7 +1,6 @@
-const  express =  require("express");
+const express = require("express");
 const router = express.Router();
-const UserCtrl = require('../controllers/user.controller');
-
+const UserCtrl = require("../controllers/user.controller");
 
 router.get("/", UserCtrl.apiGetAllUsers);
 router.post("/", UserCtrl.apiCreateUser);
@@ -9,7 +8,7 @@ router.post("/", UserCtrl.apiCreateUser);
  * @openapi
  * /checkAuth:
  *   post:
- *      
+ *
  *     responses:
  *       200:
  *         description: Check AuthToken of user.
@@ -32,7 +31,6 @@ router.post("/", UserCtrl.apiCreateUser);
  *                         description: The user's name.
  *                         example: Leanne Graham
  */
-router.post('/checkAuth', UserCtrl.apiCheckIDToken);
+router.post("/checkAuth", UserCtrl.apiCheckIDToken); //Auth route
 
-
-module.exports =  router;
+module.exports = router;
