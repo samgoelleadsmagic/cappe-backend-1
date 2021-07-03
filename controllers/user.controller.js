@@ -1,4 +1,4 @@
-const UserService = require("../services/user.services");
+const { UserService } = require("../services/user.services");
 
 module.exports = class Users {
   static async apiGetAllUsers(req, res, next) {

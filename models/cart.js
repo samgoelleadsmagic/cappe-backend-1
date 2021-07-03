@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const cart_Item = sequelize.define(
-    "cart_Item",
+    "cart_item",
     {
       productID: {
         type: Sequelize.UUID,

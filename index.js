@@ -4,6 +4,7 @@ const express = require("express");
 console.log(process.env);
 const routerUser = require('./routes/user.routes.js');
 const routerProduct = require('./routes/product.routes.js');
+const routerCart = require('./routes/cart.routes');
 const app = express();
 const port = process.env.PORT || 8080;
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/user', routerUser);
 app.use('/product', routerProduct);
+app.use('/cart', routerCart);
 
 
 const db = require('./models/index');

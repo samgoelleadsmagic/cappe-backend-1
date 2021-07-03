@@ -1,13 +1,13 @@
 const db = require("../models/index");
 const CartQuery = require("./queries/cart.queries");
-const admin = require("./user.services");
+const { admin }= require("./user.services");
 
 const Cart = db.cart;
 
 module.exports = class CartService {
   static async addItemToCart(headerData, data) {
     try {
-      const decodedToken = await admin.auth().verifyIdToken(headerData.token);
+      const decodedToken = await admin.auth().verifyIdToken(headerData.authorization);
       if (decodedToken) {
         const dataJSON = {
           phone: decodedToken.phone_number.replace('+91', ''),

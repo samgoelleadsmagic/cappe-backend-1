@@ -2,7 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define(
     "user",
     {
-      userID: {
+      user_id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
@@ -24,8 +24,8 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: "",
       },
       phone: {
-        type: Sequelize.BIGINT,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       country: {
         type: Sequelize.STRING,
@@ -46,6 +46,14 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
       },
     },
     {
