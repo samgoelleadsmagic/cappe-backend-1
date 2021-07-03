@@ -25,10 +25,10 @@ const serviceAccount = {
 //db.sequelize.sync();
 const User = db.user;
 
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+module.exports = admin;
 
 module.exports = class UserService {
   static async getAllUsers() {
@@ -70,10 +70,13 @@ module.exports = class UserService {
 
       const decodedToken = await admin.auth().verifyIdToken(token);
       console.log("This is a token ", decodedToken);
-      const data = {
+      if (decodedToken) {
+        const data = {
           phone: decodedToken.phone_number,
         };
-        const dataExists = await UserService.getUserData(data.phone);
+        const dataExists = await UserService.getUserData(
+          data.phone.replace("+91", "")
+        );
         if (dataExists.length == 0) {
           const dd = await UserService.addUser(data);
           dd.setDataValue("userExists", false);
@@ -84,12 +87,12 @@ module.exports = class UserService {
           console.log("Here 2", dataExists[0]);
           return dataExists[0];
         }
-        //return decodedToken;
       }
-      catch (error) {
-          console.log(error);
-        }
-
+      //return decodedToken;
+    } catch (error) {
+      console.log(error);
+      return error.message;
+    }
 
     //   admin
     //     .auth()
