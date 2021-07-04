@@ -52,7 +52,7 @@ module.exports = {
         console.log("User = ", User);
 
         const newUser = {
-          phone: data.phone,
+          phone: data.phone.replace("+91", ""),
         };
         const response = await User.create(newUser);
         return response;

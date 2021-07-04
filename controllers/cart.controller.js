@@ -9,4 +9,22 @@ module.exports = class Cart {
         res.status(500).json({ error: error });
       }
     }
+
+    static async apireduceItemQuantity(req, res, next) {
+      try {
+        const cart = await CartService.reduceItemQuantity(req.headers ,req.body);
+        res.json(cart);
+      } catch (error) {
+        res.status(500).json({ error: error });
+      }
+    }
+
+    static async apiGetCartItems(req, res, next) {
+      try {
+        const cart = await CartService.getCartItems(req.headers);
+        res.json(cart);
+      } catch (error) {
+        res.status(500).json({ error: error });
+      }
+    }
 }
