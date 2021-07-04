@@ -7,4 +7,4 @@ router.post("/getProducts", ProductCtrl.apiGetAllProducts);
 router.post("/add", ProductCtrl.apiAddProduct);
 
 //push check
-module.exports =  router;
+module.exports = router;
