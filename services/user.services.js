@@ -25,98 +25,105 @@ const serviceAccount = {
 //db.sequelize.sync();
 const User = db.user;
 
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-module.exports = class UserService {
-  static async getAllUsers() {
-    try {
-      const allUsers = await User.findAll();
-      return allUsers;
-    } catch (error) {
-      console.log(`Could not fetch Users ${error}`);
+module.exports = {
+  UserService: class UserService {
+    static async getAllUsers() {
+      try {
+        const allUsers = await User.findAll();
+        return allUsers;
+      } catch (error) {
+        console.log(`Could not fetch Users ${error}`);
+      }
     }
-  }
-  static async getUserData(phone_number) {
-    try {
-      const userData = await User.findAll({ where: { phone: phone_number } });
-      return userData;
-    } catch (error) {
-      console.log(`User does not exist ${error}`);
+    static async getUserData(phone_number) {
+      try {
+        const userData = await User.findAll({ attributes: ['user_id'], where: { phone: phone_number } });
+        return userData;
+      } catch (error) {
+        console.log(`User does not exist ${error}`);
+      }
     }
-  }
-  static async addUser(data) {
-    try {
-      console.log("User = ", User);
+    static async addUser(data) {
+      try {
+        console.log("User = ", User);
 
-      const newUser = {
-        phone: data.phone,
-      };
-      const response = await User.create(newUser);
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  static async checkIDToken(IDToken) {
-    try {
-      const token = IDToken.token;
-      console.log("IDToken = ", token);
-      console.log("Project ID = ", serviceAccount.project_id);
-      console.log("Private Key = ", PRIVATEKEY);
-
-      const decodedToken = await admin.auth().verifyIdToken(token);
-      console.log("This is a token ", decodedToken);
-      const data = {
-          phone: decodedToken.phone_number,
+        const newUser = {
+          phone: data.phone.replace("+91", ""),
         };
-        const dataExists = await UserService.getUserData(data.phone);
-        if (dataExists.length == 0) {
-          const dd = await UserService.addUser(data);
-          dd.setDataValue("userExists", false);
-          console.log("Here 1", dd);
-          return dd;
-        } else {
-          dataExists[0].setDataValue("userExists", true);
-          console.log("Here 2", dataExists[0]);
-          return dataExists[0];
+        const response = await User.create(newUser);
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    static async checkIDToken(IDToken) {
+      try {
+        const token = IDToken.token;
+        console.log("IDToken = ", token);
+        console.log("Project ID = ", serviceAccount.project_id);
+        console.log("Private Key = ", PRIVATEKEY);
+
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        console.log("This is a token ", decodedToken);
+        if (decodedToken) {
+          const data = {
+            phone: decodedToken.phone_number,
+          };
+          const dataExists = await UserService.getUserData(
+            data.phone.replace("+91", "")
+          );
+          if (dataExists.length == 0) {
+            // If user doesn't exist just send the phone number to the DB
+            const dd = await UserService.addUser(data);
+            dd.setDataValue("userExists", false);
+            console.log("Here 1", dd);
+            return dd;
+          } else {
+            //If user exists just retrieve all the user's data and send it to the front end
+            dataExists[0].setDataValue("userExists", true);
+            console.log("Here 2", dataExists[0]);
+            return dataExists[0];
+          }
         }
         //return decodedToken;
+      } catch (error) {
+        console.log(error);
+        return error.message;
       }
-      catch (error) {
-          console.log(error);
-        }
 
-
-    //   admin
-    //     .auth()
-    //     .verifyIdToken(token)
-    //     .then(async (decodedToken) => {
-    //       console.log("This is a token ", decodedToken);
-    //       const data = {
-    //         phone: decodedToken.phone_number,
-    //       };
-    //       const dataExists = await UserService.getUserData(data.phone);
-    //       if (dataExists.length == 0) {
-    //         const dd = await UserService.addUser(data);
-    //         dd.setDataValue("userExists", false);
-    //         console.log("Here 1", dd);
-    //         return dd;
-    //       } else {
-    //         dataExists[0].setDataValue("userExists", true);
-    //         console.log("Here 2", dataExists[0]);
-    //         return dataExists[0];
-    //       }
-    //       //return decodedToken;
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error verifying custom token:", error);
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }
+      //   admin
+      //     .auth()
+      //     .verifyIdToken(token)
+      //     .then(async (decodedToken) => {
+      //       console.log("This is a token ", decodedToken);
+      //       const data = {
+      //         phone: decodedToken.phone_number,
+      //       };
+      //       const dataExists = await UserService.getUserData(data.phone);
+      //       if (dataExists.length == 0) {
+      //         const dd = await UserService.addUser(data);
+      //         dd.setDataValue("userExists", false);
+      //         console.log("Here 1", dd);
+      //         return dd;
+      //       } else {
+      //         dataExists[0].setDataValue("userExists", true);
+      //         console.log("Here 2", dataExists[0]);
+      //         return dataExists[0];
+      //       }
+      //       //return decodedToken;
+      //     })
+      //     .catch((error) => {
+      //       console.log("Error verifying custom token:", error);
+      //     });
+      // } catch (error) {
+      //   console.log(error);
+      // }
+    }
+  },
+  admin: admin,
 };

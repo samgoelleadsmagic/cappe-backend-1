@@ -22,11 +22,12 @@ db.sequelize = sequelize;
 db.user = require("./user.js")(sequelize, Sequelize);
 db.product = require("./products.js")(sequelize, Sequelize);
 db.category = require("./product_categories.js")(sequelize, Sequelize);
+db.cart = require('./cart.js')(sequelize, Sequelize);
 
-db.category.hasMany(db.product, {
-  foreign_key: { allowNull: false },
-  onDelete: "CASCADE",
-});
+// db.category.hasMany(db.product, {
+//   foreign_key: { allowNull: false },
+//   onDelete: "CASCADE",
+// });
 db.sequelize.sync();
 
 module.exports = db;
